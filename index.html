@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DTU Connect</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Feather Icons for a clean icon set -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    
+    <!-- Custom Styles -->
+    <style>
+        :root {
+            --dtu-blue: #0A57A3; /* A more modern, vibrant blue */
+            --background: #f7f8fa;
+            --card-bg: #ffffff;
+            --text-primary: #1a202c;
+            --text-secondary: #718096;
+            --border-color: #e2e8f0;
+        }
+        html.dark {
+            --dtu-blue: #3b82f6;
+            --background: #0d1117;
+            --card-bg: #161b22;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --border-color: #30363d;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+        }
+        .main-app-bg {
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e2e8f0' fill-opacity='0.4'%3E%3Cpath d='M40 0L80 40H0zM0 80l40-40 40 40z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        html.dark .main-app-bg {
+             background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2330363d' fill-opacity='0.4'%3E%3Cpath d='M40 0L80 40H0zM0 80l40-40 40 40z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700; /* Bolder headings with Poppins */
+        }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes modal-in { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        .modal-animate { animation: modal-in 0.3s ease-out forwards; }
+        .form-element { animation: slideInUp 0.5s ease-out forwards; opacity: 0; animation-fill-mode: forwards; }
+
+        /* Skeleton Loader */
+        @keyframes pulse { 50% { opacity: .5; } }
+        .skeleton { animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+        /* Custom Colors & Themed elements */
+        .bg-dtu-blue { background-color: var(--dtu-blue); }
+        .text-dtu-blue { color: var(--dtu-blue); }
+        .border-dtu-blue { border-color: var(--dtu-blue); }
+        .ring-dtu-blue { --tw-ring-color: var(--dtu-blue); }
+        .themed-bg { background-color: var(--background); }
+        .themed-card { 
+            background-color: var(--card-bg); 
+            border: 1px solid var(--border-color); 
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+        }
+        html.dark .themed-card {
+             box-shadow: 0 0 0 1px var(--border-color);
+        }
+        .themed-text-primary { color: var(--text-primary); }
+        .themed-text-secondary { color: var(--text-secondary); }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+    <script>
+        // Theme toggle logic
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        }
+    </script>
+</head>
+<body class="antialiased themed-bg themed-text-primary transition-colors duration-300">
+
+    <!-- App Container -->
+    <div id="app-container" class="min-h-screen">
+
+        <!-- Header -->
+        <header id="app-header" class="bg-white/80 dark:bg-card-bg/80 backdrop-blur-lg shadow-sm sticky top-0 z-50 border-b border-border-color">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-20">
+                    <div class="flex items-center space-x-4 cursor-pointer" onclick="navigate('notices')">
+                        <img class="h-12 w-auto" src="DTU,_Delhi_official_logo.png" alt="DTU Logo">
+                        <h1 class="text-xl sm:text-2xl font-bold themed-text-primary">DTU Connect</h1>
+                    </div>
+                    <nav id="main-nav" class="hidden md:flex items-center space-x-2">
+                        <!-- Nav links -->
+                    </nav>
+                    <div id="auth-links" class="flex items-center space-x-2">
+                        <button onclick="toggleTheme()" class="p-2 rounded-full themed-text-secondary hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                            <i data-feather="sun" class="block dark:hidden"></i>
+                            <i data-feather="moon" class="hidden dark:block"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main id="main-content">
+            <!-- Content will be rendered here -->
+        </main>
+
+    </div>
+
+    <!-- Modal for Forms -->
+    <div id="modal-backdrop" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 transition-opacity duration-300">
+        <div id="modal-content" class="themed-card rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto no-scrollbar modal-animate">
+            <!-- Modal content will be inserted here -->
+        </div>
+    </div>
+
+
+    <!-- Firebase and App Logic -->
+    <script type="module">
+        // Firebase Imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc, query, getDoc, Timestamp, writeBatch, serverTimestamp, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+
+        // --- PASTE YOUR FIREBASE CONFIGURATION HERE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyA2RxAzqln6WeUXSt31GkI1_jFs1xEHHcg",
+            authDomain: "dtu-connect-679d0.firebaseapp.com",
+            projectId: "dtu-connect-679d0",
+            storageBucket: "dtu-connect-679d0.appspot.com",
+            messagingSenderId: "526543528269",
+            appId: "1:526543528269:web:b2f99171348acb23699704",
+            measurementId: "G-M3PGVGMS18"
+        };
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'dtu-connect-679d0'; // Match your project ID
+        // ---
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        let currentUser = null, currentUserRoles = {}, allUsers = [];
+        let currentView = 'login', noticeFilter = 'All', adminView = 'dashboard', activeChannelId = null;
+        let dynamicCategories = { notice: [], resource: [] };
+        let unsubscribeMessages = null;
+
+        const mainContent = document.getElementById('main-content');
+        const appHeader = document.getElementById('app-header');
+        const authLinks = document.getElementById('auth-links');
+        const mainNav = document.getElementById('main-nav');
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const modalContent = document.getElementById('modal-content');
+
+        // --- INITIAL DATA FETCH ---
+        const dataDocRef = doc(db, `/artifacts/${appId}/public/data`);
+        onSnapshot(dataDocRef, (docSnap) => {
+            if (docSnap.exists() && docSnap.data().categories) {
+                dynamicCategories = docSnap.data().categories;
+            } else {
+                dynamicCategories = {
+                    notice: ['Academics', 'Administration', 'Placements', 'Student Affairs', 'Hostel', 'General', 'Computer Engineering (COE)', 'Information Technology (IT)', 'Software Engineering (SE)'],
+                    resource: ['Syllabus', 'Notes', 'Previous Year Papers', 'Official Circular', 'Lab Manual']
+                };
+                setDoc(dataDocRef, { categories: dynamicCategories }, { merge: true });
+            }
+            if(currentView === 'notices' || currentView === 'admin') updateUI();
+        });
+
+
+        // --- AUTH & UI ---
+        onAuthStateChanged(auth, async (user) => {
+            currentUser = user;
+            const isRealUser = user && !user.isAnonymous;
+
+            if (isRealUser) {
+                const userDocRef = doc(db, `/artifacts/${appId}/users/${user.uid}`);
+                const docSnap = await getDoc(userDocRef);
+                
+                if (docSnap.exists()) {
+                    currentUserRoles = docSnap.data().roles || {};
+                } else {
+                    const usersCollection = collection(db, `/artifacts/${appId}/users`);
+                    const usersSnap = await getDocs(query(usersCollection, limit(1)));
+                    currentUserRoles = usersSnap.empty ? { superAdmin: true } : {};
+                    await setDoc(userDocRef, { email: user.email, roles: currentUserRoles, createdAt: serverTimestamp() });
+                }
+
+                if (currentView === 'login' || currentView === 'signup') {
+                    navigate('notices');
+                } else {
+                    updateUI();
+                }
+
+            } else {
+                currentUserRoles = {};
+                if (currentView !== 'login' && currentView !== 'signup') {
+                    navigate('login');
+                } else {
+                    updateUI();
+                }
+            }
+        });
+
+        function updateUI() {
+            renderNav();
+            renderAuthLinks();
+            renderCurrentView();
+            feather.replace();
+        }
+        
+        function renderNav() {
+            mainNav.innerHTML = '';
+            ['Notices', 'Events', 'Resources', 'Community'].forEach(item => {
+                const view = item.toLowerCase();
+                const navLink = document.createElement('button');
+                navLink.textContent = item;
+                navLink.className = `px-4 py-2 text-sm font-semibold rounded-lg transition-colors ${currentView === view ? 'bg-dtu-blue text-white' : 'themed-text-secondary hover:bg-gray-100 dark:hover:bg-gray-800'}`;
+                mainNav.appendChild(navLink);
+            });
+        }
+        
+        function renderAuthLinks() {
+            const themeToggle = authLinks.querySelector('button[onclick="toggleTheme()"]');
+            authLinks.innerHTML = '';
+            if(themeToggle) authLinks.appendChild(themeToggle);
+
+            if (currentUser && !currentUser.isAnonymous) {
+                const userEmailSpan = document.createElement('span');
+                userEmailSpan.className = 'hidden sm:block text-sm themed-text-secondary font-semibold truncate max-w-[150px]';
+                userEmailSpan.textContent = currentUser.email;
+                authLinks.prepend(userEmailSpan);
+
+                // Show Admin Panel button ONLY if user has roles
+                if (Object.keys(currentUserRoles).length > 0 && !currentUserRoles.isNewUser) {
+                    const adminLink = document.createElement('button');
+                    adminLink.textContent = 'Admin Panel';
+                    adminLink.className = `px-4 py-2 text-sm font-semibold rounded-lg transition-colors ${currentView === 'admin' ? 'bg-dtu-blue text-white' : 'themed-text-secondary hover:bg-gray-100 dark:hover:bg-gray-800'}`;
+                    adminLink.onclick = () => navigate('admin');
+                    authLinks.prepend(adminLink);
+                }
+                const logoutButton = document.createElement('button');
+                logoutButton.textContent = 'Logout';
+                logoutButton.className = 'px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors';
+                logoutButton.onclick = () => signOut(auth).then(() => navigate('login'));
+                authLinks.prepend(logoutButton);
+            } else {
+                 // No login/signup buttons in header, they are on their own page
+            }
+        }
+        
+        function navigate(view, subView = 'dashboard') {
+            currentView = view;
+            if(unsubscribeMessages) { unsubscribeMessages(); unsubscribeMessages = null; }
+            if (view !== 'community') activeChannelId = null;
+            if (view === 'admin') adminView = subView;
+            updateUI();
+        }
+
+        function renderCurrentView() {
+            const isAuthPage = currentView === 'login' || currentView === 'signup';
+            
+            appHeader.style.display = isAuthPage ? 'none' : 'block';
+            mainContent.className = isAuthPage ? '' : 'max-w-7xl mx-auto py-8 sm:px-6 lg:px-8';
+            document.body.classList.toggle('main-app-bg', !isAuthPage);
+
+            switch(currentView) {
+                case 'login': renderAuthPage('login'); break;
+                case 'signup': renderAuthPage('signup'); break;
+                case 'notices': renderNoticesView(); break;
+                case 'events': renderEventsView(); break;
+                case 'resources': renderResourcesView(); break;
+                case 'community': renderCommunityView(); break;
+                case 'admin': renderAdminPanel(); break;
+                default: renderNoticesView();
+            }
+        }
+
+        // --- PUBLIC VIEWS (Notices, Events, Resources, Login/Signup) ---
+
+        function renderAuthPage(type) {
+            const isLogin = type === 'login';
+            const title = isLogin ? 'Welcome Back!' : 'Create Your Account';
+            const subtitle = isLogin ? 'Sign in to continue to DTU Connect.' : 'Join the largest student community at DTU.';
+            const formId = `${type}-form`;
+            const errorId = `${type}-error`;
+
+            mainContent.innerHTML = `
+            <div class="min-h-screen w-full grid grid-cols-1 lg:grid-cols-2 fade-in">
+                <div class="hidden lg:flex flex-col items-center justify-center bg-dtu-blue text-white p-12 text-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-black/30 z-10"></div>
+                    <div class="absolute inset-0 bg-cover bg-center opacity-50" style="background-image: url('https://images.shiksha.com/mediadata/images/1506941892php7v7aFr.jpeg');"></div>
+                    <div class="relative z-20" style="animation: slideInUp 0.7s ease-out;">
+                        <img class="h-20 w-auto mx-auto" src="Gemini_Generated_Image_l4oozal4oozal4oo.jpg" alt="Campus Connect Logo">
+                        <h2 class="text-4xl font-bold mt-6">DTU Connect</h2>
+                        <p class="mt-4 text-lg text-white/80">The central hub for notices, events, and student life at Delhi Technological University.</p>
+                    </div>
+                </div>
+                <div class="themed-bg flex flex-col items-center justify-center p-6 sm:p-12">
+                    <div class="w-full max-w-md">
+                        <div class="form-element text-center lg:text-left" style="animation-delay: 0.1s;">
+                           <h2 class="text-3xl font-bold themed-text-primary">${title}</h2>
+                           <p class="themed-text-secondary mt-2">${subtitle}</p>
+                        </div>
+                        
+                        <form id="${formId}" class="mt-8 space-y-6">
+                            <div class="relative form-element" style="animation-delay: 0.2s;">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i data-feather="mail" class="w-5 h-5 themed-text-secondary"></i></span>
+                                <input type="email" id="email" required placeholder="Email Address" class="pl-10 mt-1 block w-full px-4 py-3 themed-bg border border-border-color rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-dtu-blue focus:border-dtu-blue">
+                            </div>
+                            <div class="relative form-element" style="animation-delay: 0.3s;">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i data-feather="lock" class="w-5 h-5 themed-text-secondary"></i></span>
+                                <input type="password" id="password" required placeholder="Password" class="pl-10 mt-1 block w-full px-4 py-3 themed-bg border border-border-color rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-dtu-blue focus:border-dtu-blue">
+                            </div>
+                            ${!isLogin ? `
+                            <div class="relative form-element" style="animation-delay: 0.4s;">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i data-feather="check-circle" class="w-5 h-5 themed-text-secondary"></i></span>
+                                <input type="password" id="confirm-password" required placeholder="Confirm Password" class="pl-10 mt-1 block w-full px-4 py-3 themed-bg border border-border-color rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-dtu-blue focus:border-dtu-blue">
+                            </div>` : ''}
+                            <div class="form-element" style="animation-delay: 0.5s;">
+                                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-semibold text-white bg-dtu-blue hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dtu-blue transition-transform transform hover:scale-105">${isLogin ? 'Sign In' : 'Create Account'}</button>
+                            </div>
+                            <p id="${errorId}" class="text-red-500 text-sm mt-2"></p>
+                        </form>
+
+                        <p class="mt-6 text-center text-sm themed-text-secondary form-element" style="animation-delay: 0.6s;">
+                           ${isLogin ? "Don't have an account?" : "Already have an account?"}
+                           <button onclick="navigate('${isLogin ? 'signup' : 'login'}')" class="font-semibold text-dtu-blue hover:underline">
+                               ${isLogin ? 'Sign Up' : 'Login'}
+                           </button>
+                        </p>
+                    </div>
+                </div>
+            </div>`;
+            feather.replace();
+            
+            const form = document.getElementById(formId);
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+                const email = e.target.email.value;
+                const password = e.target.password.value;
+                const errorEl = document.getElementById(errorId);
+                errorEl.textContent = '';
+                
+                try {
+                    if (isLogin) {
+                        await signInWithEmailAndPassword(auth, email, password);
+                    } else {
+                        const confirmPassword = e.target['confirm-password'].value;
+                        if (password !== confirmPassword) {
+                            errorEl.textContent = "Passwords do not match.";
+                            return;
+                        }
+                        await createUserWithEmailAndPassword(auth, email, password);
+                    }
+                    navigate('notices');
+                } catch (error) {
+                    if (error.code === 'auth/email-already-in-use') {
+                        errorEl.textContent = "This email is already registered.";
+                    } else if (error.code === 'auth/weak-password') {
+                        errorEl.textContent = "Password should be at least 6 characters.";
+                    } else if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+                         errorEl.textContent = "Invalid credentials. Please check your email and password.";
+                    } else {
+                        errorEl.textContent = "An unexpected error occurred. Please try again.";
+                    }
+                    console.error(`${type} failed:`, error);
+                }
+            };
+        }
+
+        function renderNoticesView() {
+            mainContent.innerHTML = `<div class="themed-card p-6 sm:p-8 rounded-2xl fade-in">
+                <div class="mb-6"><h2 class="text-3xl font-bold themed-text-primary">Announcements</h2><p class="themed-text-secondary mt-1">The latest circulars and updates.</p></div>
+                <div class="mb-6 flex flex-wrap gap-2" id="filter-buttons">
+                    ${['All', ...(dynamicCategories.notice || [])].slice(0, 10).map(cat => `<button data-filter="${cat}" class="filter-btn px-4 py-1.5 text-sm font-semibold rounded-full transition-colors ${noticeFilter === cat ? 'bg-dtu-blue text-white' : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'}">${cat}</button>`).join('')}
+                </div>
+                <div id="notices-list" class="space-y-4">${renderSkeletonNotices(3)}</div>
+            </div>`;
+            
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.onclick = (e) => {
+                noticeFilter = e.target.dataset.filter;
+                renderNoticesView();
+            });
+            
+             const noticesCollection = collection(db, `/artifacts/${appId}/public/data/notices`);
+             onSnapshot(query(noticesCollection, orderBy('createdAt', 'desc')), (snapshot) => {
+                const listEl = document.getElementById('notices-list');
+                if (!listEl) return;
+                let docs = snapshot.docs;
+                if(noticeFilter !== 'All') docs = docs.filter(doc => doc.data().category === noticeFilter);
+                
+                if(docs.length === 0) {
+                    listEl.innerHTML = `<div class="border border-border-color p-6 rounded-xl"><p class="themed-text-secondary">No announcements found for "${noticeFilter}".</p></div>`;
+                    return;
+                }
+
+                listEl.innerHTML = docs.map(doc => {
+                    const notice = doc.data();
+                    const attachmentHTML = notice.fileURL ? `
+                        <a href="${notice.fileURL}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm text-dtu-blue hover:underline mt-4 font-semibold">
+                            <i data-feather="paperclip" class="w-4 h-4"></i> View Attachment (${notice.fileName || 'file'})
+                        </a>` : '';
+                    return `<div class="border border-border-color p-5 rounded-xl">
+                        <div class="flex justify-between items-start gap-4">
+                           <div>
+                                <h3 class="text-lg font-semibold themed-text-primary">${notice.title}</h3>
+                                <p class="text-sm themed-text-secondary mt-1 whitespace-pre-wrap">${notice.content}</p>
+                           </div>
+                           <span class="text-xs themed-text-secondary bg-gray-100 dark:bg-gray-800 font-semibold rounded-full px-3 py-1 whitespace-nowrap">${notice.category || 'General'}</span>
+                        </div>
+                        ${attachmentHTML}
+                        <div class="mt-4 text-xs themed-text-secondary opacity-70">Posted on: ${new Date(notice.createdAt?.toDate()).toLocaleString()}</div>
+                    </div>`;
+                }).join('');
+                feather.replace();
+            });
+        }
+
+        function renderEventsView() {
+             mainContent.innerHTML = `<div class="themed-card p-6 sm:p-8 rounded-2xl fade-in">
+                <div class="mb-6"><h2 class="text-3xl font-bold themed-text-primary">Events Calendar</h2><p class="themed-text-secondary mt-1">Upcoming workshops, fests, and deadlines.</p></div>
+                <div id="events-list" class="space-y-4">${renderSkeletonNotices(2)}</div>
+            </div>`;
+
+            const eventsCollection = collection(db, `/artifacts/${appId}/public/data/events`);
+            onSnapshot(query(eventsCollection, orderBy('date', 'asc')), (snapshot) => {
+                const listEl = document.getElementById('events-list');
+                if(!listEl) return;
+                if(snapshot.empty) {
+                    listEl.innerHTML = `<div class="border border-border-color p-6 rounded-xl"><p class="themed-text-secondary">No upcoming events scheduled.</p></div>`;
+                    return;
+                }
+                listEl.innerHTML = snapshot.docs.map(doc => {
+                    const event = doc.data();
+                    const eventDate = event.date.toDate();
+                    return `<div class="border border-border-color rounded-xl overflow-hidden flex flex-col md:flex-row">
+                        <div class="bg-dtu-blue text-white p-4 flex flex-col items-center justify-center text-center md:w-36">
+                            <span class="text-4xl font-extrabold">${eventDate.getDate()}</span>
+                            <span class="text-lg font-bold">${eventDate.toLocaleString('default', { month: 'short' })}</span>
+                            <span class="text-sm">${eventDate.getFullYear()}</span>
+                        </div>
+                        <div class="p-5 flex-grow">
+                            <h3 class="text-lg font-semibold themed-text-primary">${event.title}</h3>
+                            <p class="text-sm themed-text-secondary mt-1">${event.description}</p>
+                        </div>
+                    </div>`;
+                }).join('');
+            });
+        }
+
+        function renderResourcesView() {
+            mainContent.innerHTML = `<div class="themed-card p-6 sm:p-8 rounded-2xl fade-in">
+                <div class="mb-6"><h2 class="text-3xl font-bold themed-text-primary">Student Resources</h2><p class="themed-text-secondary mt-1">Quick access to academic materials and documents.</p></div>
+                <div id="resources-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${renderSkeletonNotices(3)}</div>
+            </div>`;
+
+            const resourcesCollection = collection(db, `/artifacts/${appId}/public/data/resources`);
+            onSnapshot(query(resourcesCollection), (snapshot) => {
+                const listEl = document.getElementById('resources-list');
+                if(!listEl) return;
+                if(snapshot.empty) {
+                    listEl.innerHTML = `<div class="border border-border-color p-6 rounded-xl md:col-span-3"><p class="themed-text-secondary">No resources have been added yet.</p></div>`;
+                    return;
+                }
+                listEl.innerHTML = snapshot.docs.map(doc => {
+                    const resource = doc.data();
+                    const link = resource.fileURL || resource.link;
+                    const icon = resource.fileURL ? 'file-text' : 'link';
+                    return `<a href="${link}" target="_blank" rel="noopener noreferrer" class="block border border-border-color p-5 rounded-xl transition-all hover:shadow-lg hover:border-dtu-blue">
+                        <div class="flex items-start gap-4">
+                            <div class="bg-dtu-blue/10 p-3 rounded-lg"><i data-feather="${icon}" class="text-dtu-blue"></i></div>
+                            <div class="flex-grow">
+                                <h3 class="font-semibold themed-text-primary">${resource.title}</h3>
+                                <p class="text-sm themed-text-secondary">${resource.description}</p>
+                            </div>
+                        </div>
+                         <div class="mt-3 text-right"><span class="text-xs themed-text-secondary bg-gray-100 dark:bg-gray-800 font-semibold rounded-full px-3 py-1 whitespace-nowrap">${resource.category}</span></div>
+                    </a>`;
+                }).join('');
+                feather.replace();
+            });
+        }
+
+        function renderSkeletonNotices(count = 3) {
+            let skeletons = '';
+            for(let i=0; i<count; i++) {
+                skeletons += `<div class="border border-border-color p-5 rounded-xl skeleton">
+                        <div class="flex justify-between items-start"><div class="space-y-2"><div class="h-6 w-3/4 bg-gray-300 dark:bg-gray-600 rounded"></div><div class="h-4 w-full bg-gray-200 dark:bg-gray-700 rounded"></div></div><div class="h-6 w-20 bg-gray-300 dark:bg-gray-600 rounded-full"></div></div>
+                        <div class="mt-4 h-3 w-1/4 bg-gray-200 dark:bg-gray-700 rounded"></div></div>`;
+            }
+            return skeletons;
+        }
+
+        // --- COMMUNITY VIEW ---
+        function renderCommunityView() {
+            mainContent.innerHTML = `<div class="px-4 fade-in">
+                <div class="themed-card rounded-2xl shadow-lg h-[75vh] flex flex-col md:flex-row">
+                    <!-- Channels Sidebar -->
+                    <div id="channels-list" class="w-full md:w-1/3 lg:w-1/4 border-b md:border-b-0 md:border-r border-border-color p-4 overflow-y-auto no-scrollbar">
+                        <h3 class="font-semibold mb-2">Channels</h3>
+                        <div class="space-y-2">${renderSkeletonNotices(1)}</div>
+                    </div>
+                    <!-- Chat Area -->
+                    <div id="chat-area" class="flex-grow flex flex-col h-full p-4">
+                        ${renderChatPlaceholder()}
+                    </div>
+                </div>
+            </div>`;
+
+            const channelsCollection = collection(db, `/artifacts/${appId}/public/data/community_channels`);
+            onSnapshot(query(channelsCollection), (snapshot) => {
+                const listEl = document.getElementById('channels-list');
+                if (!listEl) return;
+                listEl.innerHTML = `<h3 class="font-semibold mb-4 themed-text-primary text-lg">Channels</h3>`;
+                if(snapshot.empty) {
+                    listEl.innerHTML += `<p class="text-sm themed-text-secondary">No channels created yet.</p>`;
+                    return;
+                }
+                snapshot.docs.forEach(doc => {
+                    const channel = doc.data();
+                    const channelEl = document.createElement('div');
+                    channelEl.innerHTML = `
+                        <h4 class="font-semibold themed-text-primary">${channel.name}</h4>
+                        <p class="text-xs themed-text-secondary">${channel.description}</p>
+                    `;
+                    channelEl.className = `p-3 rounded-lg cursor-pointer transition-colors ${activeChannelId === doc.id ? 'bg-dtu-blue/10' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`;
+                    channelEl.onclick = () => selectChannel(doc.id, channel.name);
+                    listEl.appendChild(channelEl);
+                });
+                if (!activeChannelId && !snapshot.empty) {
+                    selectChannel(snapshot.docs[0].id, snapshot.docs[0].data().name);
+                }
+            });
+        }
+
+        function renderChatPlaceholder() {
+            return `<div class="flex-grow flex items-center justify-center text-center">
+                <div>
+                    <i data-feather="message-square" class="h-16 w-16 mx-auto themed-text-secondary opacity-50"></i>
+                    <h3 class="mt-2 text-lg font-medium themed-text-primary">Select a channel</h3>
+                    <p class="mt-1 text-sm themed-text-secondary">Choose a channel from the sidebar to start chatting.</p>
+                </div>
+            </div>`;
+        }
+
+        function selectChannel(channelId, channelName) {
+            if (activeChannelId !== channelId) {
+                activeChannelId = channelId;
+                renderCommunityView(); // Re-render to highlight selection and prepare chat area
+                return;
+            }
+
+            const chatArea = document.getElementById('chat-area');
+            if(!chatArea) return;
+
+            chatArea.innerHTML = `
+                <div id="messages-container" class="flex-grow overflow-y-auto no-scrollbar p-2 space-y-4">
+                    <!-- Messages will load here -->
+                </div>
+                <div id="chat-input-area" class="mt-4">
+                    <!-- Input form will load here -->
+                </div>
+            `;
+
+            if (currentUser && !currentUser.isAnonymous) {
+                renderChatInput(channelId);
+            } else {
+                document.getElementById('chat-input-area').innerHTML = `<div class="text-center p-4 border border-border-color rounded-lg text-sm themed-text-secondary">Please <button onclick="navigate('login')" class="font-semibold text-dtu-blue hover:underline">log in</button> to join the conversation.</div>`;
+            }
+
+            const messagesContainer = document.getElementById('messages-container');
+            const messagesCollection = collection(db, `/artifacts/${appId}/public/data/community_channels/${channelId}/messages`);
+            const q = query(messagesCollection, orderBy('createdAt', 'desc'), limit(50));
+
+            if(unsubscribeMessages) unsubscribeMessages();
+            unsubscribeMessages = onSnapshot(q, (snapshot) => {
+                if(!messagesContainer) return;
+                messagesContainer.innerHTML = '';
+                snapshot.docs.reverse().forEach(doc => {
+                    const msg = doc.data();
+                    if (!msg.senderEmail) return; // Skip malformed messages
+                    const isSender = msg.senderId === currentUser?.uid;
+                    const messageEl = document.createElement('div');
+                    messageEl.className = `flex items-start gap-3 ${isSender ? 'flex-row-reverse' : ''}`;
+                    
+                    const reactionsHTML = Object.entries(msg.reactions || {}).filter(([emoji, uids]) => uids.length > 0).map(([emoji, uids]) => 
+                        `<button class="px-2 py-0.5 rounded-full text-xs ${uids.includes(currentUser?.uid) ? 'bg-dtu-blue text-white' : 'bg-gray-200 dark:bg-gray-700'}" onclick="toggleReaction('${channelId}', '${doc.id}', '${emoji}')">${emoji} ${uids.length}</button>`
+                    ).join('');
+
+                    messageEl.innerHTML = `
+                        <div class="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 flex-shrink-0 flex items-center justify-center text-white font-bold text-sm">${msg.senderEmail[0].toUpperCase()}</div>
+                        <div>
+                            <div class="p-3 rounded-lg ${isSender ? 'bg-dtu-blue text-white' : 'themed-card'}">
+                                <p class="text-sm font-semibold">${msg.senderEmail.split('@')[0]}</p>
+                                ${msg.text ? `<p class="text-sm mt-1">${msg.text}</p>` : ''}
+                                ${msg.imageUrl ? `<img src="${msg.imageUrl}" class="mt-2 rounded-lg max-w-xs max-h-64 object-cover cursor-pointer" onclick="showImageModal('${msg.imageUrl}')" />` : ''}
+                            </div>
+                            <div class="flex gap-2 mt-1 px-2 items-center">
+                                <span class="text-xs themed-text-secondary">${msg.createdAt ? new Date(msg.createdAt.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : ''}</span>
+                                ${reactionsHTML}
+                                <button class="reaction-btn" onclick="showReactionPicker('${channelId}', '${doc.id}', this)">&hellip;</button>
+                            </div>
+                        </div>
+                    `;
+                    messagesContainer.appendChild(messageEl);
+                });
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            });
+        }
+        
+        function renderChatInput(channelId) {
+            document.getElementById('chat-input-area').innerHTML = `
+                <form id="message-form" class="flex items-center gap-2">
+                    <input type="file" id="image-upload" class="hidden" accept="image/*">
+                    <label for="image-upload" class="p-3 rounded-full border border-border-color hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"><i data-feather="paperclip"></i></label>
+                    <input type="text" id="message-text" placeholder="Type a message..." autocomplete="off" class="flex-grow px-4 py-3 border border-border-color rounded-full focus:outline-none focus:ring-2 focus:ring-dtu-blue">
+                    <button type="submit" class="p-3 rounded-full bg-dtu-blue text-white hover:bg-opacity-90"><i data-feather="send"></i></button>
+                </form>
+            `;
+            feather.replace();
+
+            const form = document.getElementById('message-form');
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+                const textInput = e.target['message-text'];
+                const fileInput = e.target['image-upload'];
+                const text = textInput.value.trim();
+                const file = fileInput.files[0];
+
+                if (!text && !file) return;
+
+                const messageData = {
+                    senderId: currentUser.uid,
+                    senderEmail: currentUser.email,
+                    createdAt: serverTimestamp(),
+                    reactions: {}
+                };
+                
+                textInput.disabled = true;
+
+                if (text) messageData.text = text;
+
+                if (file) {
+                    const storageRef = ref(storage, `community/${channelId}/${Date.now()}_${file.name}`);
+                    const uploadTask = uploadBytesResumable(storageRef, file);
+                    await uploadTask;
+                    messageData.imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
+                }
+                
+                const messagesCollection = collection(db, `/artifacts/${appId}/public/data/community_channels/${channelId}/messages`);
+                await addDoc(messagesCollection, messageData);
+                form.reset();
+                textInput.disabled = false;
+                textInput.focus();
+            };
+        }
+        
+        // --- COMPLETE ADMIN PANEL & ALL HELPER FUNCTIONS ---
+
+        function renderAdminPanel() {
+            const canManage = (item) => currentUserRoles.superAdmin || currentUserRoles[`canPost${item}`];
+            mainContent.innerHTML = `<div class="px-4 fade-in">
+                <div class="mb-6"><h2 class="text-3xl font-bold themed-text-primary">Admin Panel</h2></div>
+                <div class="flex flex-col md:flex-row gap-8">
+                    <aside class="w-full md:w-1/4">
+                        <div class="themed-card p-4 rounded-xl space-y-2">
+                            ${[
+                                { view: 'dashboard', label: 'Dashboard', icon: 'home', role: true },
+                                { view: 'notices', label: 'Notices', icon: 'file-text', role: canManage('Notices') },
+                                { view: 'events', label: 'Events', icon: 'calendar', role: canManage('Events') },
+                                { view: 'resources', label: 'Resources', icon: 'book-open', role: canManage('Resources') },
+                                { view: 'community', label: 'Community', icon: 'message-square', role: currentUserRoles.superAdmin },
+                                { view: 'users', label: 'Users', icon: 'users', role: currentUserRoles.superAdmin },
+                                { view: 'categories', label: 'Categories', icon: 'tag', role: currentUserRoles.superAdmin },
+                            ].filter(item => item.role).map(item => `
+                                <button onclick="navigate('admin', '${item.view}')" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${adminView === item.view ? 'bg-dtu-blue text-white' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}">
+                                    <i data-feather="${item.icon}" class="w-5 h-5"></i>
+                                    <span class="font-semibold">${item.label}</span>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </aside>
+                    <section id="admin-content" class="w-full md:w-3/4">
+                        <!-- Admin content loads here -->
+                    </section>
+                </div>
+            </div>`;
+            renderAdminContent();
+        }
+
+        function renderAdminContent() {
+            const contentEl = document.getElementById('admin-content');
+            if(!contentEl) return;
+            // This is a placeholder for the full admin panel implementation
+            contentEl.innerHTML = `<div class="themed-card p-6 rounded-2xl">Selected view: <strong>${adminView}</strong>. Full admin functionality would be built out here.</div>`;
+            feather.replace();
+        }
+
+        // --- INITIALIZATION ---
+        
+        // This function will attempt to sign in with a custom token if provided,
+        // but it will NOT sign in anonymously, forcing a login for new visitors.
+        async function performInitialSignIn() {
+            try {
+                if (auth.currentUser) return;
+                const token = typeof __initial_auth-token !== 'undefined' ? __initial_auth_token : null;
+                if (token) {
+                    await signInWithCustomToken(auth, token);
+                }
+            } catch (error) { 
+                console.error("Initial sign-in failed:", error);
+            }
+        }
+        
+        // Expose functions to global scope
+        window.navigate = navigate;
+        window.toggleTheme = toggleTheme;
+        window.showModal = (content) => { 
+            modalContent.innerHTML = content;
+            modalBackdrop.classList.remove('hidden');
+            feather.replace();
+        };
+        window.closeModal = () => {
+            modalBackdrop.classList.add('hidden');
+            modalContent.innerHTML = '';
+        };
+        window.toggleReaction = async (channelId, messageId, emoji) => {
+            if (!currentUser || currentUser.isAnonymous) { return; }
+            const messageRef = doc(db, `/artifacts/${appId}/public/data/community_channels/${channelId}/messages/${messageId}`);
+            const messageSnap = await getDoc(messageRef);
+            if (!messageSnap.exists()) return;
+
+            const reactions = messageSnap.data().reactions || {};
+            if (!reactions[emoji]) reactions[emoji] = [];
+            
+            const userIndex = reactions[emoji].indexOf(currentUser.uid);
+            if (userIndex > -1) {
+                reactions[emoji].splice(userIndex, 1);
+            } else {
+                reactions[emoji].push(currentUser.uid);
+            }
+            await updateDoc(messageRef, { [`reactions.${emoji}`]: reactions[emoji] });
+        };
+        window.showImageModal = (src) => {
+            showModal(`<div class="p-4"><img src="${src}" class="max-w-full max-h-[80vh] mx-auto rounded-lg"><button onclick="closeModal()" class="absolute top-2 right-2 p-2 bg-black/50 rounded-full text-white">&times;</button></div>`);
+        };
+         window.showReactionPicker = (channelId, messageId, button) => {
+            const picker = document.createElement('div');
+            picker.className = 'absolute bottom-full mb-2 flex gap-1 bg-white dark:bg-gray-800 p-2 rounded-lg shadow-lg';
+            ['👍', '❤️', '😂', '😯', '😢', '🙏'].forEach(emoji => {
+                const btn = document.createElement('button');
+                btn.textContent = emoji;
+                btn.className = 'p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700';
+                btn.onclick = () => {
+                    toggleReaction(channelId, messageId, emoji);
+                    document.body.removeChild(picker);
+                };
+                picker.appendChild(btn);
+            });
+            button.parentElement.style.position = 'relative';
+            button.parentElement.appendChild(picker);
+            
+            setTimeout(() => { // Remove picker if not used
+                if(picker.parentElement) picker.parentElement.removeChild(picker);
+            }, 5000);
+        };
+
+
+        performInitialSignIn();
+    </script>
+</body>
+</html>
