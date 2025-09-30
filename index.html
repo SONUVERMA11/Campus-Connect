@@ -39,11 +39,12 @@
             background-color: var(--background);
             color: var(--text-primary);
         }
+        /* New, cleaner background pattern */
         .main-app-bg {
-            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e2e8f0' fill-opacity='0.4'%3E%3Cpath d='M40 0L80 40H0zM0 80l40-40 40 40z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23e2e8f0' fill-opacity='0.4' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
         }
         html.dark .main-app-bg {
-             background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2330363d' fill-opacity='0.4'%3E%3Cpath d='M40 0L80 40H0zM0 80l40-40 40 40z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+             background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2330363d' fill-opacity='0.4' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
         }
         h1, h2, h3, h4, h5, h6 {
             font-weight: 700; /* Bolder headings with Poppins */
@@ -106,14 +107,14 @@
     <div id="app-container" class="min-h-screen">
 
         <!-- Header -->
-        <header id="app-header" class="bg-white/80 dark:bg-card-bg/80 backdrop-blur-lg shadow-sm sticky top-0 z-50 border-b border-border-color">
+        <header id="app-header" class="themed-card sticky top-0 z-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between h-20">
+                <div class="flex items-center justify-between h-16">
                     <div class="flex items-center space-x-4 cursor-pointer" onclick="navigate('notices')">
-                        <img class="h-12 w-auto" src="DTU,_Delhi_official_logo.png" alt="DTU Logo">
-                        <h1 class="text-xl sm:text-2xl font-bold themed-text-primary">DTU Connect</h1>
+                        <img class="h-10 w-auto" src="DTU,_Delhi_official_logo.png" alt="DTU Logo">
+                        <h1 class="text-lg sm:text-xl font-bold themed-text-primary tracking-tight">DTU Connect</h1>
                     </div>
-                    <nav id="main-nav" class="hidden md:flex items-center space-x-2">
+                    <nav id="main-nav" class="hidden md:flex items-center space-x-4">
                         <!-- Nav links -->
                     </nav>
                     <div id="auth-links" class="flex items-center space-x-2">
@@ -241,8 +242,12 @@
             ['Notices', 'Events', 'Resources', 'Community'].forEach(item => {
                 const view = item.toLowerCase();
                 const navLink = document.createElement('button');
-                navLink.textContent = item;
-                navLink.className = `px-4 py-2 text-sm font-semibold rounded-lg transition-colors ${currentView === view ? 'bg-dtu-blue text-white' : 'themed-text-secondary hover:bg-gray-100 dark:hover:bg-gray-800'}`;
+                navLink.innerHTML = `
+                    ${item}
+                    <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-0.5 bg-dtu-blue rounded-full transition-all ${currentView === view ? 'opacity-100' : 'opacity-0'}"></span>
+                `;
+                navLink.className = `relative px-2 py-2 text-sm font-semibold transition-colors ${currentView === view ? 'themed-text-primary' : 'themed-text-secondary hover:themed-text-primary'}`;
+                navLink.onclick = () => navigate(view);
                 mainNav.appendChild(navLink);
             });
         }
@@ -262,7 +267,7 @@
                 if (Object.keys(currentUserRoles).length > 0 && !currentUserRoles.isNewUser) {
                     const adminLink = document.createElement('button');
                     adminLink.textContent = 'Admin Panel';
-                    adminLink.className = `px-4 py-2 text-sm font-semibold rounded-lg transition-colors ${currentView === 'admin' ? 'bg-dtu-blue text-white' : 'themed-text-secondary hover:bg-gray-100 dark:hover:bg-gray-800'}`;
+                    adminLink.className = `px-3 py-2 text-sm font-semibold rounded-lg transition-colors ${currentView === 'admin' ? 'bg-dtu-blue text-white' : 'themed-text-secondary hover:bg-gray-100 dark:hover:bg-gray-800'}`;
                     adminLink.onclick = () => navigate('admin');
                     authLinks.prepend(adminLink);
                 }
@@ -731,7 +736,7 @@
         async function performInitialSignIn() {
             try {
                 if (auth.currentUser) return;
-                const token = typeof __initial_auth-token !== 'undefined' ? __initial_auth_token : null;
+                const token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
                 if (token) {
                     await signInWithCustomToken(auth, token);
                 }
@@ -798,3 +803,4 @@
     </script>
 </body>
 </html>
+
