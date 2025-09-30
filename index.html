@@ -8,10 +8,10 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts: Poppins -->
+    <!-- Google Fonts: Poppins for body, Lora for headings -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Feather Icons for a clean icon set -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
@@ -19,35 +19,35 @@
     <!-- Custom Styles -->
     <style>
         :root {
-            --dtu-blue: #0A57A3; /* A more modern, vibrant blue */
-            --background: #f7f8fa;
+            --dtu-blue: #002244; /* Classic Navy Blue */
+            --background: #f8f7f2; /* Warm Off-White */
             --card-bg: #ffffff;
             --text-primary: #1a202c;
-            --text-secondary: #718096;
+            --text-secondary: #5a677d;
             --border-color: #e2e8f0;
+            --hover-bg: #f1f5f9;
         }
         html.dark {
-            --dtu-blue: #3b82f6;
+            --dtu-blue: #58a6ff;
             --background: #0d1117;
             --card-bg: #161b22;
             --text-primary: #c9d1d9;
             --text-secondary: #8b949e;
             --border-color: #30363d;
+            --hover-bg: #22272e;
         }
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--background);
             color: var(--text-primary);
         }
-        /* New, cleaner background pattern */
         .main-app-bg {
-            background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23e2e8f0' fill-opacity='0.4' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+            background-color: var(--background);
         }
-        html.dark .main-app-bg {
-             background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2330363d' fill-opacity='0.4' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
-        }
-        h1, h2, h3, h4, h5, h6 {
-            font-weight: 700; /* Bolder headings with Poppins */
+        
+        h1, h2, h3, h4, h5, h6, .font-lora {
+            font-family: 'Lora', serif;
+            font-weight: 700;
         }
 
         /* Animations */
@@ -72,13 +72,11 @@
         .themed-card { 
             background-color: var(--card-bg); 
             border: 1px solid var(--border-color); 
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
-        }
-        html.dark .themed-card {
-             box-shadow: 0 0 0 1px var(--border-color);
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
         }
         .themed-text-primary { color: var(--text-primary); }
         .themed-text-secondary { color: var(--text-secondary); }
+        .themed-hover-bg { background-color: var(--hover-bg); }
         
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -107,18 +105,18 @@
     <div id="app-container" class="min-h-screen">
 
         <!-- Header -->
-        <header id="app-header" class="themed-card sticky top-0 z-50">
+        <header id="app-header" class="bg-card-bg sticky top-0 z-50 border-b border-border-color shadow-sm">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
                     <div class="flex items-center space-x-4 cursor-pointer" onclick="navigate('notices')">
                         <img class="h-10 w-auto" src="DTU,_Delhi_official_logo.png" alt="DTU Logo">
-                        <h1 class="text-lg sm:text-xl font-bold themed-text-primary tracking-tight">DTU Connect</h1>
+                        <h1 class="text-lg sm:text-xl font-bold themed-text-primary tracking-tight font-lora">DTU Connect</h1>
                     </div>
                     <nav id="main-nav" class="hidden md:flex items-center space-x-4">
                         <!-- Nav links -->
                     </nav>
                     <div id="auth-links" class="flex items-center space-x-2">
-                        <button onclick="toggleTheme()" class="p-2 rounded-full themed-text-secondary hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                        <button onclick="toggleTheme()" class="p-2 rounded-full themed-text-secondary hover:themed-hover-bg transition-colors">
                             <i data-feather="sun" class="block dark:hidden"></i>
                             <i data-feather="moon" class="hidden dark:block"></i>
                         </button>
@@ -136,7 +134,7 @@
 
     <!-- Modal for Forms -->
     <div id="modal-backdrop" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 transition-opacity duration-300">
-        <div id="modal-content" class="themed-card rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto no-scrollbar modal-animate">
+        <div id="modal-content" class="themed-card rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto no-scrollbar modal-animate">
             <!-- Modal content will be inserted here -->
         </div>
     </div>
@@ -244,9 +242,9 @@
                 const navLink = document.createElement('button');
                 navLink.innerHTML = `
                     ${item}
-                    <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-0.5 bg-dtu-blue rounded-full transition-all ${currentView === view ? 'opacity-100' : 'opacity-0'}"></span>
+                    <span class="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-full h-0.5 bg-dtu-blue rounded-full transition-all scale-x-0 group-hover:scale-x-100 ${currentView === view ? 'scale-x-100' : ''}"></span>
                 `;
-                navLink.className = `relative px-2 py-2 text-sm font-semibold transition-colors ${currentView === view ? 'themed-text-primary' : 'themed-text-secondary hover:themed-text-primary'}`;
+                navLink.className = `relative group px-2 py-2 text-sm font-semibold transition-colors ${currentView === view ? 'themed-text-primary' : 'themed-text-secondary hover:themed-text-primary'}`;
                 navLink.onclick = () => navigate(view);
                 mainNav.appendChild(navLink);
             });
@@ -267,13 +265,13 @@
                 if (Object.keys(currentUserRoles).length > 0 && !currentUserRoles.isNewUser) {
                     const adminLink = document.createElement('button');
                     adminLink.textContent = 'Admin Panel';
-                    adminLink.className = `px-3 py-2 text-sm font-semibold rounded-lg transition-colors ${currentView === 'admin' ? 'bg-dtu-blue text-white' : 'themed-text-secondary hover:bg-gray-100 dark:hover:bg-gray-800'}`;
+                    adminLink.className = `px-3 py-2 text-sm font-semibold rounded-md transition-colors ${currentView === 'admin' ? 'bg-dtu-blue text-white' : 'themed-text-secondary hover:themed-hover-bg'}`;
                     adminLink.onclick = () => navigate('admin');
                     authLinks.prepend(adminLink);
                 }
                 const logoutButton = document.createElement('button');
                 logoutButton.textContent = 'Logout';
-                logoutButton.className = 'px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors';
+                logoutButton.className = 'px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors';
                 logoutButton.onclick = () => signOut(auth).then(() => navigate('login'));
                 authLinks.prepend(logoutButton);
             } else {
@@ -323,34 +321,34 @@
                     <div class="absolute inset-0 bg-black/30 z-10"></div>
                     <div class="absolute inset-0 bg-cover bg-center opacity-50" style="background-image: url('https://images.shiksha.com/mediadata/images/1506941892php7v7aFr.jpeg');"></div>
                     <div class="relative z-20" style="animation: slideInUp 0.7s ease-out;">
-                        <img class="h-20 w-auto mx-auto" src="Gemini_Generated_Image_l4oozal4oozal4oo.jpg" alt="Campus Connect Logo">
-                        <h2 class="text-4xl font-bold mt-6">DTU Connect</h2>
+                        <img class="h-20 w-auto mx-auto" src="DTU,_Delhi_official_logo.png" alt="DTU Logo">
+                        <h2 class="text-4xl font-bold mt-6 font-lora">DTU Connect</h2>
                         <p class="mt-4 text-lg text-white/80">The central hub for notices, events, and student life at Delhi Technological University.</p>
                     </div>
                 </div>
                 <div class="themed-bg flex flex-col items-center justify-center p-6 sm:p-12">
                     <div class="w-full max-w-md">
                         <div class="form-element text-center lg:text-left" style="animation-delay: 0.1s;">
-                           <h2 class="text-3xl font-bold themed-text-primary">${title}</h2>
+                           <h2 class="text-3xl font-bold themed-text-primary font-lora">${title}</h2>
                            <p class="themed-text-secondary mt-2">${subtitle}</p>
                         </div>
                         
                         <form id="${formId}" class="mt-8 space-y-6">
                             <div class="relative form-element" style="animation-delay: 0.2s;">
-                                <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i data-feather="mail" class="w-5 h-5 themed-text-secondary"></i></span>
-                                <input type="email" id="email" required placeholder="Email Address" class="pl-10 mt-1 block w-full px-4 py-3 themed-bg border border-border-color rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-dtu-blue focus:border-dtu-blue">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-4"><i data-feather="mail" class="w-5 h-5 themed-text-secondary"></i></span>
+                                <input type="email" id="email" required placeholder="Email Address" class="pl-12 mt-1 block w-full px-4 py-3 themed-bg border border-border-color rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-dtu-blue focus:border-dtu-blue">
                             </div>
                             <div class="relative form-element" style="animation-delay: 0.3s;">
-                                <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i data-feather="lock" class="w-5 h-5 themed-text-secondary"></i></span>
-                                <input type="password" id="password" required placeholder="Password" class="pl-10 mt-1 block w-full px-4 py-3 themed-bg border border-border-color rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-dtu-blue focus:border-dtu-blue">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-4"><i data-feather="lock" class="w-5 h-5 themed-text-secondary"></i></span>
+                                <input type="password" id="password" required placeholder="Password" class="pl-12 mt-1 block w-full px-4 py-3 themed-bg border border-border-color rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-dtu-blue focus:border-dtu-blue">
                             </div>
                             ${!isLogin ? `
                             <div class="relative form-element" style="animation-delay: 0.4s;">
-                                <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i data-feather="check-circle" class="w-5 h-5 themed-text-secondary"></i></span>
-                                <input type="password" id="confirm-password" required placeholder="Confirm Password" class="pl-10 mt-1 block w-full px-4 py-3 themed-bg border border-border-color rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-dtu-blue focus:border-dtu-blue">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-4"><i data-feather="check-circle" class="w-5 h-5 themed-text-secondary"></i></span>
+                                <input type="password" id="confirm-password" required placeholder="Confirm Password" class="pl-12 mt-1 block w-full px-4 py-3 themed-bg border border-border-color rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-dtu-blue focus:border-dtu-blue">
                             </div>` : ''}
                             <div class="form-element" style="animation-delay: 0.5s;">
-                                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-semibold text-white bg-dtu-blue hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dtu-blue transition-transform transform hover:scale-105">${isLogin ? 'Sign In' : 'Create Account'}</button>
+                                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-semibold text-white bg-dtu-blue hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dtu-blue transition-transform transform hover:scale-105">${isLogin ? 'Sign In' : 'Create Account'}</button>
                             </div>
                             <p id="${errorId}" class="text-red-500 text-sm mt-2"></p>
                         </form>
@@ -402,10 +400,10 @@
         }
 
         function renderNoticesView() {
-            mainContent.innerHTML = `<div class="themed-card p-6 sm:p-8 rounded-2xl fade-in">
-                <div class="mb-6"><h2 class="text-3xl font-bold themed-text-primary">Announcements</h2><p class="themed-text-secondary mt-1">The latest circulars and updates.</p></div>
+            mainContent.innerHTML = `<div class="themed-card p-6 sm:p-8 rounded-xl fade-in">
+                <div class="mb-6"><h2 class="text-3xl font-bold themed-text-primary font-lora">Announcements</h2><p class="themed-text-secondary mt-1">The latest circulars and updates.</p></div>
                 <div class="mb-6 flex flex-wrap gap-2" id="filter-buttons">
-                    ${['All', ...(dynamicCategories.notice || [])].slice(0, 10).map(cat => `<button data-filter="${cat}" class="filter-btn px-4 py-1.5 text-sm font-semibold rounded-full transition-colors ${noticeFilter === cat ? 'bg-dtu-blue text-white' : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'}">${cat}</button>`).join('')}
+                    ${['All', ...(dynamicCategories.notice || [])].slice(0, 10).map(cat => `<button data-filter="${cat}" class="filter-btn px-4 py-1.5 text-sm font-semibold rounded-md transition-colors ${noticeFilter === cat ? 'bg-dtu-blue text-white' : 'bg-background border border-border-color themed-text-secondary hover:themed-hover-bg'}">${cat}</button>`).join('')}
                 </div>
                 <div id="notices-list" class="space-y-4">${renderSkeletonNotices(3)}</div>
             </div>`;
@@ -423,7 +421,7 @@
                 if(noticeFilter !== 'All') docs = docs.filter(doc => doc.data().category === noticeFilter);
                 
                 if(docs.length === 0) {
-                    listEl.innerHTML = `<div class="border border-border-color p-6 rounded-xl"><p class="themed-text-secondary">No announcements found for "${noticeFilter}".</p></div>`;
+                    listEl.innerHTML = `<div class="border border-border-color p-6 rounded-lg"><p class="themed-text-secondary">No announcements found for "${noticeFilter}".</p></div>`;
                     return;
                 }
 
@@ -433,13 +431,13 @@
                         <a href="${notice.fileURL}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm text-dtu-blue hover:underline mt-4 font-semibold">
                             <i data-feather="paperclip" class="w-4 h-4"></i> View Attachment (${notice.fileName || 'file'})
                         </a>` : '';
-                    return `<div class="border border-border-color p-5 rounded-xl">
+                    return `<div class="border border-border-color p-5 rounded-lg">
                         <div class="flex justify-between items-start gap-4">
                            <div>
-                                <h3 class="text-lg font-semibold themed-text-primary">${notice.title}</h3>
+                                <h3 class="text-lg font-semibold themed-text-primary font-lora">${notice.title}</h3>
                                 <p class="text-sm themed-text-secondary mt-1 whitespace-pre-wrap">${notice.content}</p>
                            </div>
-                           <span class="text-xs themed-text-secondary bg-gray-100 dark:bg-gray-800 font-semibold rounded-full px-3 py-1 whitespace-nowrap">${notice.category || 'General'}</span>
+                           <span class="text-xs themed-text-secondary bg-background border border-border-color font-semibold rounded-full px-3 py-1 whitespace-nowrap">${notice.category || 'General'}</span>
                         </div>
                         ${attachmentHTML}
                         <div class="mt-4 text-xs themed-text-secondary opacity-70">Posted on: ${new Date(notice.createdAt?.toDate()).toLocaleString()}</div>
@@ -450,8 +448,8 @@
         }
 
         function renderEventsView() {
-             mainContent.innerHTML = `<div class="themed-card p-6 sm:p-8 rounded-2xl fade-in">
-                <div class="mb-6"><h2 class="text-3xl font-bold themed-text-primary">Events Calendar</h2><p class="themed-text-secondary mt-1">Upcoming workshops, fests, and deadlines.</p></div>
+             mainContent.innerHTML = `<div class="themed-card p-6 sm:p-8 rounded-xl fade-in">
+                <div class="mb-6"><h2 class="text-3xl font-bold themed-text-primary font-lora">Events Calendar</h2><p class="themed-text-secondary mt-1">Upcoming workshops, fests, and deadlines.</p></div>
                 <div id="events-list" class="space-y-4">${renderSkeletonNotices(2)}</div>
             </div>`;
 
@@ -460,20 +458,20 @@
                 const listEl = document.getElementById('events-list');
                 if(!listEl) return;
                 if(snapshot.empty) {
-                    listEl.innerHTML = `<div class="border border-border-color p-6 rounded-xl"><p class="themed-text-secondary">No upcoming events scheduled.</p></div>`;
+                    listEl.innerHTML = `<div class="border border-border-color p-6 rounded-lg"><p class="themed-text-secondary">No upcoming events scheduled.</p></div>`;
                     return;
                 }
                 listEl.innerHTML = snapshot.docs.map(doc => {
                     const event = doc.data();
                     const eventDate = event.date.toDate();
-                    return `<div class="border border-border-color rounded-xl overflow-hidden flex flex-col md:flex-row">
-                        <div class="bg-dtu-blue text-white p-4 flex flex-col items-center justify-center text-center md:w-36">
+                    return `<div class="border border-border-color rounded-lg overflow-hidden flex flex-col md:flex-row">
+                        <div class="bg-dtu-blue text-white p-4 flex flex-col items-center justify-center text-center md:w-32">
                             <span class="text-4xl font-extrabold">${eventDate.getDate()}</span>
                             <span class="text-lg font-bold">${eventDate.toLocaleString('default', { month: 'short' })}</span>
                             <span class="text-sm">${eventDate.getFullYear()}</span>
                         </div>
                         <div class="p-5 flex-grow">
-                            <h3 class="text-lg font-semibold themed-text-primary">${event.title}</h3>
+                            <h3 class="text-lg font-semibold themed-text-primary font-lora">${event.title}</h3>
                             <p class="text-sm themed-text-secondary mt-1">${event.description}</p>
                         </div>
                     </div>`;
@@ -482,8 +480,8 @@
         }
 
         function renderResourcesView() {
-            mainContent.innerHTML = `<div class="themed-card p-6 sm:p-8 rounded-2xl fade-in">
-                <div class="mb-6"><h2 class="text-3xl font-bold themed-text-primary">Student Resources</h2><p class="themed-text-secondary mt-1">Quick access to academic materials and documents.</p></div>
+            mainContent.innerHTML = `<div class="themed-card p-6 sm:p-8 rounded-xl fade-in">
+                <div class="mb-6"><h2 class="text-3xl font-bold themed-text-primary font-lora">Student Resources</h2><p class="themed-text-secondary mt-1">Quick access to academic materials and documents.</p></div>
                 <div id="resources-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${renderSkeletonNotices(3)}</div>
             </div>`;
 
@@ -492,22 +490,22 @@
                 const listEl = document.getElementById('resources-list');
                 if(!listEl) return;
                 if(snapshot.empty) {
-                    listEl.innerHTML = `<div class="border border-border-color p-6 rounded-xl md:col-span-3"><p class="themed-text-secondary">No resources have been added yet.</p></div>`;
+                    listEl.innerHTML = `<div class="border border-border-color p-6 rounded-lg md:col-span-3"><p class="themed-text-secondary">No resources have been added yet.</p></div>`;
                     return;
                 }
                 listEl.innerHTML = snapshot.docs.map(doc => {
                     const resource = doc.data();
                     const link = resource.fileURL || resource.link;
                     const icon = resource.fileURL ? 'file-text' : 'link';
-                    return `<a href="${link}" target="_blank" rel="noopener noreferrer" class="block border border-border-color p-5 rounded-xl transition-all hover:shadow-lg hover:border-dtu-blue">
+                    return `<a href="${link}" target="_blank" rel="noopener noreferrer" class="block border border-border-color p-5 rounded-lg transition-all hover:shadow-md hover:border-dtu-blue">
                         <div class="flex items-start gap-4">
-                            <div class="bg-dtu-blue/10 p-3 rounded-lg"><i data-feather="${icon}" class="text-dtu-blue"></i></div>
+                            <div class="bg-dtu-blue/10 p-3 rounded-md"><i data-feather="${icon}" class="text-dtu-blue"></i></div>
                             <div class="flex-grow">
                                 <h3 class="font-semibold themed-text-primary">${resource.title}</h3>
                                 <p class="text-sm themed-text-secondary">${resource.description}</p>
                             </div>
                         </div>
-                         <div class="mt-3 text-right"><span class="text-xs themed-text-secondary bg-gray-100 dark:bg-gray-800 font-semibold rounded-full px-3 py-1 whitespace-nowrap">${resource.category}</span></div>
+                         <div class="mt-3 text-right"><span class="text-xs themed-text-secondary bg-background border border-border-color font-semibold rounded-full px-3 py-1 whitespace-nowrap">${resource.category}</span></div>
                     </a>`;
                 }).join('');
                 feather.replace();
@@ -517,7 +515,7 @@
         function renderSkeletonNotices(count = 3) {
             let skeletons = '';
             for(let i=0; i<count; i++) {
-                skeletons += `<div class="border border-border-color p-5 rounded-xl skeleton">
+                skeletons += `<div class="border border-border-color p-5 rounded-lg skeleton">
                         <div class="flex justify-between items-start"><div class="space-y-2"><div class="h-6 w-3/4 bg-gray-300 dark:bg-gray-600 rounded"></div><div class="h-4 w-full bg-gray-200 dark:bg-gray-700 rounded"></div></div><div class="h-6 w-20 bg-gray-300 dark:bg-gray-600 rounded-full"></div></div>
                         <div class="mt-4 h-3 w-1/4 bg-gray-200 dark:bg-gray-700 rounded"></div></div>`;
             }
@@ -527,10 +525,10 @@
         // --- COMMUNITY VIEW ---
         function renderCommunityView() {
             mainContent.innerHTML = `<div class="px-4 fade-in">
-                <div class="themed-card rounded-2xl shadow-lg h-[75vh] flex flex-col md:flex-row">
+                <div class="themed-card rounded-xl shadow-lg h-[75vh] flex flex-col md:flex-row">
                     <!-- Channels Sidebar -->
                     <div id="channels-list" class="w-full md:w-1/3 lg:w-1/4 border-b md:border-b-0 md:border-r border-border-color p-4 overflow-y-auto no-scrollbar">
-                        <h3 class="font-semibold mb-2">Channels</h3>
+                        <h3 class="font-semibold mb-2 font-lora text-lg">Channels</h3>
                         <div class="space-y-2">${renderSkeletonNotices(1)}</div>
                     </div>
                     <!-- Chat Area -->
@@ -544,7 +542,7 @@
             onSnapshot(query(channelsCollection), (snapshot) => {
                 const listEl = document.getElementById('channels-list');
                 if (!listEl) return;
-                listEl.innerHTML = `<h3 class="font-semibold mb-4 themed-text-primary text-lg">Channels</h3>`;
+                listEl.innerHTML = `<h3 class="font-semibold mb-4 themed-text-primary text-lg font-lora">Channels</h3>`;
                 if(snapshot.empty) {
                     listEl.innerHTML += `<p class="text-sm themed-text-secondary">No channels created yet.</p>`;
                     return;
@@ -556,7 +554,7 @@
                         <h4 class="font-semibold themed-text-primary">${channel.name}</h4>
                         <p class="text-xs themed-text-secondary">${channel.description}</p>
                     `;
-                    channelEl.className = `p-3 rounded-lg cursor-pointer transition-colors ${activeChannelId === doc.id ? 'bg-dtu-blue/10' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`;
+                    channelEl.className = `p-3 rounded-md cursor-pointer transition-colors ${activeChannelId === doc.id ? 'bg-dtu-blue/10' : 'hover:themed-hover-bg'}`;
                     channelEl.onclick = () => selectChannel(doc.id, channel.name);
                     listEl.appendChild(channelEl);
                 });
@@ -570,7 +568,7 @@
             return `<div class="flex-grow flex items-center justify-center text-center">
                 <div>
                     <i data-feather="message-square" class="h-16 w-16 mx-auto themed-text-secondary opacity-50"></i>
-                    <h3 class="mt-2 text-lg font-medium themed-text-primary">Select a channel</h3>
+                    <h3 class="mt-2 text-lg font-medium themed-text-primary font-lora">Select a channel</h3>
                     <p class="mt-1 text-sm themed-text-secondary">Choose a channel from the sidebar to start chatting.</p>
                 </div>
             </div>`;
@@ -645,7 +643,7 @@
             document.getElementById('chat-input-area').innerHTML = `
                 <form id="message-form" class="flex items-center gap-2">
                     <input type="file" id="image-upload" class="hidden" accept="image/*">
-                    <label for="image-upload" class="p-3 rounded-full border border-border-color hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"><i data-feather="paperclip"></i></label>
+                    <label for="image-upload" class="p-3 rounded-full border border-border-color hover:themed-hover-bg cursor-pointer"><i data-feather="paperclip"></i></label>
                     <input type="text" id="message-text" placeholder="Type a message..." autocomplete="off" class="flex-grow px-4 py-3 border border-border-color rounded-full focus:outline-none focus:ring-2 focus:ring-dtu-blue">
                     <button type="submit" class="p-3 rounded-full bg-dtu-blue text-white hover:bg-opacity-90"><i data-feather="send"></i></button>
                 </form>
@@ -693,7 +691,7 @@
         function renderAdminPanel() {
             const canManage = (item) => currentUserRoles.superAdmin || currentUserRoles[`canPost${item}`];
             mainContent.innerHTML = `<div class="px-4 fade-in">
-                <div class="mb-6"><h2 class="text-3xl font-bold themed-text-primary">Admin Panel</h2></div>
+                <div class="mb-6"><h2 class="text-3xl font-bold themed-text-primary font-lora">Admin Panel</h2></div>
                 <div class="flex flex-col md:flex-row gap-8">
                     <aside class="w-full md:w-1/4">
                         <div class="themed-card p-4 rounded-xl space-y-2">
@@ -706,7 +704,7 @@
                                 { view: 'users', label: 'Users', icon: 'users', role: currentUserRoles.superAdmin },
                                 { view: 'categories', label: 'Categories', icon: 'tag', role: currentUserRoles.superAdmin },
                             ].filter(item => item.role).map(item => `
-                                <button onclick="navigate('admin', '${item.view}')" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${adminView === item.view ? 'bg-dtu-blue text-white' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}">
+                                <button onclick="navigate('admin', '${item.view}')" class="w-full flex items-center gap-3 px-4 py-3 rounded-md text-left transition-colors ${adminView === item.view ? 'bg-dtu-blue text-white' : 'hover:themed-hover-bg'}">
                                     <i data-feather="${item.icon}" class="w-5 h-5"></i>
                                     <span class="font-semibold">${item.label}</span>
                                 </button>
@@ -725,7 +723,7 @@
             const contentEl = document.getElementById('admin-content');
             if(!contentEl) return;
             // This is a placeholder for the full admin panel implementation
-            contentEl.innerHTML = `<div class="themed-card p-6 rounded-2xl">Selected view: <strong>${adminView}</strong>. Full admin functionality would be built out here.</div>`;
+            contentEl.innerHTML = `<div class="themed-card p-6 rounded-xl">Selected view: <strong>${adminView}</strong>. Full admin functionality would be built out here.</div>`;
             feather.replace();
         }
 
@@ -783,7 +781,7 @@
             ['👍', '❤️', '😂', '😯', '😢', '🙏'].forEach(emoji => {
                 const btn = document.createElement('button');
                 btn.textContent = emoji;
-                btn.className = 'p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700';
+                btn.className = 'p-1 rounded-full hover:themed-hover-bg';
                 btn.onclick = () => {
                     toggleReaction(channelId, messageId, emoji);
                     document.body.removeChild(picker);
@@ -803,4 +801,3 @@
     </script>
 </body>
 </html>
-
