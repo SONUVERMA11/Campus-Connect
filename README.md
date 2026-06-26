@@ -1,4 +1,11 @@
+<p align="center">
+  <img src="assets/banner.png" alt="Campus-Connect Banner" width="100%">
+</p>
+
 # Campus-Connect
+
+> A unified digital ecosystem for university campuses. Integrates student networking, event management, academic resources, and real-time announcements into a single, cohesive social platform.
+
 DTU Connect
 A centralized digital hub designed to streamline communication and consolidate essential resources for students, faculty, and administration at Delhi Technological University.
 
@@ -64,3 +71,6 @@ For a complete walkthrough, please refer to the detailed Deployment Guide.
 The application uses a simple and effective method for initial setup: the first user to sign up automatically becomes the Super Admin.
 
 Simply deploy the application, navigate to the live URL, create an account, and the "Admin Panel" button will appear in the header, giving you full control over the application.
+
+---
+Made with ❤️ by [Sonu Verma](https://github.com/SONUVERMA11)
